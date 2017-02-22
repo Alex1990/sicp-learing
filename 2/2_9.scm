@@ -1,0 +1,151 @@
+(define (make-interval a b) (cons a b))
+
+(define (upper-bound x) (cdr x))
+
+(define (lower-bound x) (car x))
+
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x)
+                    (lower-bound y))
+                 (+ (upper-bound x)
+                    (upper-bound y))))
+
+(define (sub-interval x y)
+  (make-interval (- (lower-bound x)
+                    (upper-bound y))
+                 (- (upper-bound x)
+                    (lower-bound y))))
+
+(define (mul-interval x y)
+  (let ((p1 (* (lower-bound x)
+               (lower-bound y)))
+        (p2 (* (lower-bound x)
+               (upper-bound y)))
+        (p3 (* (upper-bound x)
+               (lower-bound y)))
+        (p4 (* (upper-bound x)
+               (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4)
+                   (max p1 p2 p3 p4))))
+
+;Hard to understand this
+(define (div-interval x y)
+  (mul-interval x
+                (make-interval
+                  (/ 1.0 (upper-bound y))
+                  (/ 1.0 (lower-bound y)))))
+
+(define (width x)
+  (/ (- (upper-bound x)
+        (lower-bound x))
+     2.0))
+
+(width (add-interval x y)
+       (/ (- (upper-bound (make-interval (+ (lower-bound x)
+                                            (lower-bound y))
+                                         (+ (upper-bound x)
+                                            (upper-bound y))))
+             (lower-bound (make-interval (+ (lower-bound x)
+                                            (lower-bound y))
+                                         (+ (upper-bound x)
+                                            (upper-bound y)))))
+          2.0))
+
+(width (add-interval x y)
+       (/ (- (cdr (cons (+ (car x)
+                           (car y))
+                        (+ (cdr x)
+                           (cdr y))))
+             (car (cons (+ (car x)
+                           (car y))
+                        (+ (cdr x)
+                           (cdr y)))))
+          2.0))
+
+(width (add-interval x y)
+       (/ (- (+ (cdr x)
+                (cdr y))
+             (+ (car x)
+                (car y)))
+          2.0))
+
+(+ (width x)
+   (width y))
+
+(+ (/ (- (upper-bound x)
+         (lower-bound x))
+      2.0)
+   (/ (- (upper-bound y)
+         (lower-bound y))
+      2.0))
+
+(+ (/ (- (cdr x)
+         (car x))
+      2.0)
+   (/ (- (cdr y)
+         (car y))
+      2.0))
+
+(/ (+ (- (cdr x)
+         (car x))
+      (- (cdr y)
+         (car y)))
+   2.0)
+
+;Show sub-interval
+(width (sub-interval x y)
+
+(/ (- (upper-bound (sub-interval x y))
+      (lower-bound (sub-interval x y)))
+   2.0))
+
+(/ (- (upper-bound (make-interval (- (lower-bound x)
+                                     (upper-bound y))
+                                  (- (upper-bound x)
+                                     (lower-bound y))))
+      (lower-bound (make-interval (- (lower-bound x)
+                                     (upper-bound y))
+                                  (- (upper-bound x)
+                                     (lower-bound y)))))
+   2.0))
+
+(/ (- (cdr (cons (- (car x)
+                    (cdr y))
+                 (- (cdr x)
+                    (car y))))
+      (car (cons (- (car x)
+                    (cdr y))
+                 (- (cdr x)
+                    (car y)))))
+   2.0)
+
+(/ (- (- (cdr x)
+         (car y))
+      (- (car x)
+         (cdr y)))
+   2.0)
+
+(- (width x)
+   (width y))
+
+(- (/ (- (upper-bound x)
+         (lower-bound x))
+      2.0)
+   (/ (- (upper-bound y)
+         (lower-bound y))
+      2.0))
+
+(- (/ (- (cdr x)
+         (car x))
+      2.0)
+   (/ (- (cdr y)
+         (car y))
+      2.0))
+
+(/ (- (- (cdr x)
+         (car x))
+      (- (cdr y)
+         (car y)))
+   2.0)
+
+

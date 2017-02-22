@@ -1,0 +1,10 @@
+(define (lookup given-key set-of-records)
+  (if (null? set-of-records)
+      #f
+      (let ((current-key (key (car set-of-records))))
+        (cond ((= given-key current-key)
+               (car set-of-records))
+              ((< given-key current-key)
+               (cadr set-of-records))
+              ((> give-key current-key)
+               (caddr set-of-records))))))

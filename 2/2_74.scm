@@ -1,0 +1,56 @@
+(define (attach-tag tag x) (cons tag x))
+
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (error
+            "No method for these types:
+            APPLY-GENERIC"
+            (list op type-tags))))))
+
+(define (get-record record)
+  (apply-generic 'get-record record))
+
+(define (install-division-1)
+  (define (make-record name address salary)
+    (cons name address salary))
+  (define (get-name record) (car record))
+  (define (get-address record) (cadr record))
+  (define (get-salary record) (caddr record))
+  (define (get-record record)
+    (list (get-name record)
+          (get-address record)
+          (get-salary record)))
+  (define (find-employ-record name division)
+    (filter (lambda (r) (eq? (get-name r) name) division)
+  (define (tag x) (attach-tag 'division-1 x))
+  (put 'get-record 'division-1 get-record)
+  (put 'find-employee-record 'division-1 find-employ-record)
+  'done)
+
+(define (install-division-2)
+  (define (make-record name salary address)
+    (cons name salary address))
+  (define (get-name record) (car record))
+  (define (get-salary record) (cadr record))
+  (define (get-address record) (caddr record))
+  (define (get-record record)
+    (list (get-name record)
+          (get-address record)
+          (get-salary record)))
+  (define (find-employ-record name division)
+    (filter (lambda (r) (eq? (get-name r) name) division)
+  (define (tag x) (attach-tag 'division-2 x))
+  (put 'get-record 'division-2 get-record)
+  (put 'find-employee-record 'division-2 find-employ-record)
+  'done)
+
+(define (get-salary record)
+  (cadr (get-record record)))
+
+(define (find-employee-record name divisions)
+  (append (map (lambda (division)
+         (apply-generic 'find-employee-record name division))
+       divisions)))
